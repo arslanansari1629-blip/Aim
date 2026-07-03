@@ -1,0 +1,338 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Modern AI Assistant</title>
+    <style>
+        :root {
+            --bg-color: #1a1a24;
+            --chat-bg: #242432;
+            --header-bg: #2d2d3f;
+            --accent-color: #6366f1;
+            --accent-hover: #4f46e5;
+            --text-main: #f3f4f6;
+            --text-muted: #9ca3af;
+            --user-msg: #6366f1;
+            --bot-msg: #37374f;
+            --input-bg: #1e1e2b;
+            --border-color: #37374f;
+        }
+
+        * {
+            box-sizing: border-box;
+            margin: 0;
+            padding: 0;
+            font-family: system-ui, -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, Oxygen, Ubuntu, Cantarell, sans-serif;
+        }
+
+        body {
+            background-color: var(--bg-color);
+            color: var(--text-main);
+            display: flex;
+            justify-content: center;
+            align-items: center;
+            height: 100vh;
+            padding: 20px;
+        }
+
+        .chat-container {
+            width: 100%;
+            max-width: 800px;
+            height: 85vh;
+            background: var(--chat-bg);
+            border-radius: 20px;
+            box-shadow: 0 12px 40px rgba(0, 0, 0, 0.3);
+            display: flex;
+            flex-direction: column;
+            overflow: hidden;
+            border: 1px solid var(--border-color);
+        }
+
+        .chat-header {
+            background: var(--header-bg);
+            padding: 20px 24px;
+            display: flex;
+            align-items: center;
+            gap: 12px;
+            border-bottom: 1px solid var(--border-color);
+        }
+
+        .status-dot {
+            width: 10px;
+            height: 10px;
+            background-color: #10b981;
+            border-radius: 50%;
+            box-shadow: 0 0 8px #10b981;
+        }
+
+        .chat-header h1 {
+            font-size: 1.15rem;
+            font-weight: 600;
+        }
+
+        .chat-messages {
+            flex: 1;
+            padding: 24px;
+            overflow-y: auto;
+            display: flex;
+            flex-direction: column;
+            gap: 16px;
+            scroll-behavior: smooth;
+        }
+
+        /* Custom Scrollbar */
+        .chat-messages::-webkit-scrollbar {
+            width: 6px;
+        }
+        .chat-messages::-webkit-scrollbar-thumb {
+            background: var(--border-color);
+            border-radius: 10px;
+        }
+
+        .message {
+            max-width: 75%;
+            padding: 14px 18px;
+            border-radius: 16px;
+            font-size: 0.98rem;
+            line-height: 1.5;
+            word-wrap: break-word;
+            white-space: pre-wrap;
+            animation: fadeIn 0.25s ease-out forwards;
+        }
+
+        @keyframes fadeIn {
+            from { opacity: 0; transform: translateY(8px); }
+            to { opacity: 1; transform: translateY(0); }
+        }
+
+        .user-message {
+            background: var(--user-msg);
+            color: #ffffff;
+            align-self: flex-end;
+            border-bottom-right-radius: 4px;
+        }
+
+        .bot-message {
+            background: var(--bot-msg);
+            color: var(--text-main);
+            align-self: flex-start;
+            border-bottom-left-radius: 4px;
+        }
+
+        .error-message {
+            background: rgba(239, 68, 68, 0.15);
+            color: #ef4444;
+            border: 1px solid rgba(239, 68, 68, 0.3);
+            align-self: center;
+            border-radius: 10px;
+            font-size: 0.9rem;
+        }
+
+        .chat-input-area {
+            display: flex;
+            padding: 20px 24px;
+            background: var(--header-bg);
+            border-top: 1px solid var(--border-color);
+            gap: 14px;
+            align-items: center;
+        }
+
+        .input-wrapper {
+            flex: 1;
+            position: relative;
+            background: var(--input-bg);
+            border: 1px solid var(--border-color);
+            border-radius: 28px;
+            display: flex;
+            align-items: center;
+            transition: all 0.2s ease;
+        }
+
+        .input-wrapper:focus-within {
+            border-color: var(--accent-color);
+            box-shadow: 0 0 0 3px rgba(99, 102, 241, 0.15);
+        }
+
+        #user-input {
+            width: 100%;
+            background: transparent;
+            border: none;
+            outline: none;
+            padding: 14px 20px;
+            color: var(--text-main);
+            font-size: 1rem;
+        }
+
+        #user-input::placeholder {
+            color: var(--text-muted);
+        }
+
+        #send-btn {
+            background: var(--accent-color);
+            color: white;
+            border: none;
+            padding: 14px 28px;
+            border-radius: 28px;
+            cursor: pointer;
+            font-size: 0.95rem;
+            font-weight: 600;
+            transition: all 0.2s ease;
+        }
+
+        #send-btn:hover {
+            background: var(--accent-hover);
+        }
+
+        #send-btn:disabled {
+            background: var(--border-color);
+            color: var(--text-muted);
+            cursor: not-allowed;
+        }
+
+        /* Dot animation for loader */
+        .typing-indicator {
+            display: flex;
+            gap: 4px;
+            padding: 4px 0;
+        }
+        .typing-indicator span {
+            width: 8px;
+            height: 8px;
+            background: var(--text-muted);
+            border-radius: 50%;
+            animation: bounce 1.4s infinite ease-in-out both;
+        }
+        .typing-indicator span:nth-child(1) { animation-delay: -0.32s; }
+        .typing-indicator span:nth-child(2) { animation-delay: -0.16s; }
+        @keyframes bounce {
+            0%, 80%, 100% { transform: scale(0); }
+            40% { transform: scale(1.0); }
+        }
+    </style>
+</head>
+<body>
+
+    <div class="chat-container">
+        <div class="chat-header">
+            <div class="status-dot"></div>
+            <h1>AI Assistant</h1>
+            <div class="ceo-tag">CEO: Arslan</div>
+            <div> Developer: Arslan</div>
+        </div>
+        <div class="chat-messages" id="chat-messages">
+            <div class="message bot-message">Hello! Type a message below to start chatting.</div>
+        </div>
+        <div class="chat-input-area">
+            <div class="input-wrapper">
+                <input type="text" id="user-input" placeholder="Ask me anything..." autocomplete="off">
+            </div>
+            <button id="send-btn">Send</button>
+        </div>
+    </div>
+
+    <script>
+        // 1. CONFIGURATION
+        const OPENROUTER_API_KEY = "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"; 
+        const MODEL_NAME = "openrouter/free"; 
+
+        // 2. DOM SETUP
+        const chatMessages = document.getElementById('chat-messages');
+        const userInput = document.getElementById('user-input');
+        const sendBtn = document.getElementById('send-btn');
+
+        let conversationHistory = [];
+
+        function appendMessage(text, type) {
+            const messageDiv = document.createElement('div');
+            messageDiv.classList.add('message');
+            
+            if (type === 'user') {
+                messageDiv.classList.add('user-message');
+                messageDiv.textContent = text;
+            } else if (type === 'bot') {
+                messageDiv.classList.add('bot-message');
+                messageDiv.textContent = text;
+            } else if (type === 'error') {
+                messageDiv.classList.add('error-message');
+                messageDiv.textContent = text;
+            } else if (type === 'loader') {
+                messageDiv.classList.add('bot-message');
+                messageDiv.innerHTML = `<div class="typing-indicator"><span></span><span></span><span></span></div>`;
+            }
+            
+            chatMessages.appendChild(messageDiv);
+            chatMessages.scrollTop = chatMessages.scrollHeight;
+            return messageDiv;
+        }
+
+        // 3. API CONNECTIVITY
+        async function handleSend() {
+            const text = userInput.value.trim();
+            if (!text || sendBtn.disabled) return;
+
+            if (OPENROUTER_API_KEY === "PASTE_YOUR_NEW_KEY_HERE" || !OPENROUTER_API_KEY.startsWith("sk-")) {
+                appendMessage("Configuration Error: Update the 'OPENROUTER_API_KEY' variable inside the code with a valid key.", "error");
+                return;
+            }
+
+            userInput.value = '';
+            userInput.disabled = true;
+            sendBtn.disabled = true;
+
+            appendMessage(text, 'user');
+            conversationHistory.push({ role: "user", content: text });
+
+            const loadingPrompt = appendMessage("", 'loader');
+
+            try {
+                const response = await fetch("https://openrouter.ai/api/v1/chat/completions", {
+                    method: "POST",
+                    headers: {
+                        "Authorization": `Bearer ${OPENROUTER_API_KEY.trim()}`,
+                        "Content-Type": "application/json",
+                        "HTTP-Referer": window.location.origin || "http://localhost",
+                        "X-Title": "Modern Chat Client"
+                    },
+                    body: JSON.stringify({
+                        model: MODEL_NAME,
+                        messages: conversationHistory,
+                        temperature: 0.7
+                    })
+                });
+
+                if (!response.ok) {
+                    const rawError = await response.text();
+                    throw new Error(`Status ${response.status}: ${rawError}`);
+                }
+
+                const data = await response.json();
+                loadingPrompt.remove();
+
+                if (data.choices && data.choices[0] && data.choices[0].message) {
+                    const reply = data.choices[0].message.content;
+                    appendMessage(reply, 'bot');
+                    conversationHistory.push({ role: "assistant", content: reply });
+                } else {
+                    throw new Error("Invalid response format received from provider.");
+                }
+
+            } catch (err) {
+                loadingPrompt.remove();
+                appendMessage(`Error: ${err.message}`, 'error');
+                console.error(err);
+            } finally {
+                userInput.disabled = false;
+                sendBtn.disabled = false;
+                userInput.focus();
+            }
+        }
+
+        // 4. EVENT LISTENERS
+        sendBtn.addEventListener('click', handleSend);
+        userInput.addEventListener('keydown', (e) => {
+            if (e.key === 'Enter') handleSend();
+        });
+    </script>
+</body>
+</html>
