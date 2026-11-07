@@ -5,8 +5,8 @@ const mat=(color,metalness=.2,roughness=.65)=>new THREE.MeshStandardMaterial({co
 
 /** Real-time operator hangar used by the home lobby. It owns a separate WebGL scene. */
 export class LobbyScene{
-  constructor(mount,accent='#72d9d0'){
-    this.mount=mount;this.running=true;this.mobile=matchMedia('(pointer:coarse)').matches;this.accent=new THREE.Color(accent);this.pointer={x:0,y:0};this.last=performance.now();this.perf={time:0,frames:0};
+  constructor(mount,accent='#72d9d0',avatar='phantom'){
+    this.mount=mount;this.avatar=avatar;this.running=true;this.mobile=matchMedia('(pointer:coarse)').matches;this.accent=new THREE.Color(accent);this.pointer={x:0,y:0};this.last=performance.now();this.perf={time:0,frames:0};
     this.scene=new THREE.Scene();this.scene.background=new THREE.Color('#10191b');this.scene.fog=new THREE.FogExp2('#10191b',.027);
     this.camera=new THREE.PerspectiveCamera(38,1,.1,180);this.camera.position.set(9,5.4,14);
     this.renderer=new THREE.WebGLRenderer({antialias:true,alpha:false,powerPreference:'high-performance'});this.renderer.setPixelRatio(Math.min(devicePixelRatio||1,this.mobile?1.1:1.5));this.renderer.shadowMap.enabled=true;this.renderer.shadowMap.type=THREE.PCFShadowMap;this.renderer.outputColorSpace=THREE.SRGBColorSpace;this.renderer.toneMapping=THREE.ACESFilmicToneMapping;this.renderer.toneMappingExposure=1.12;
@@ -36,9 +36,10 @@ export class LobbyScene{
   }
   loadOperator(){
     new GLTFLoader().load('/models/soldier.glb',asset=>{
-      if(!this.running)return;const model=asset.scene;model.scale.setScalar(3.15);model.position.set(3,.51,0);model.rotation.y=Math.PI*.87;
-      model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;o.material=o.material.clone();o.material.roughness=.55;o.material.metalness=.24;}});
-      this.scene.add(model);this.model=model;this.mixer=new THREE.AnimationMixer(model);const idle=asset.animations.find(a=>a.name==='Idle')||asset.animations[0];if(idle)this.mixer.clipAction(idle).play();
+      if(!this.running)return;const apply=human=>{if(!this.running)return;const model=(human||asset).scene;model.scale.setScalar(3.15);model.position.set(3,.51,0);model.rotation.y=Math.PI*.87;
+      model.traverse(o=>{if(o.isMesh){o.castShadow=true;o.receiveShadow=true;o.frustumCulled=false;o.material=o.material.clone();o.material.roughness=.5;o.material.metalness=.22;}});
+      this.scene.add(model);this.model=model;this.mixer=new THREE.AnimationMixer(model);const idle=asset.animations.find(a=>a.name==='Idle')||asset.animations[0];if(idle)this.mixer.clipAction(idle).play();};
+      if(this.avatar==='volt')new GLTFLoader().load('/models/michelle.glb',apply,undefined,()=>apply());else apply();
     },undefined,()=>{});
   }
   bind(){this.onResize=()=>this.resize();this.onPointer=e=>{const r=this.mount.getBoundingClientRect();this.pointer.x=(e.clientX-r.left)/r.width-.5;this.pointer.y=(e.clientY-r.top)/r.height-.5;};window.addEventListener('resize',this.onResize);this.mount.addEventListener('pointermove',this.onPointer);}

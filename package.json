@@ -1,20 +1,23 @@
 {
   "name": "ashfall-battlegrounds",
-  "version": "1.0.0",
+  "version": "1.2.0",
   "private": true,
   "type": "module",
   "scripts": {
     "dev": "vite --host 0.0.0.0",
     "build": "vite build",
-    "preview": "vite preview --host 0.0.0.0"
+    "preview": "vite preview --host 0.0.0.0",
+    "dev:peer": "peerjs --port 9000 --path /peerjs --host 0.0.0.0"
   },
   "devDependencies": {
+    "peer": "^1.0.2",
     "vite": "^7.1.7"
   },
   "dependencies": {
     "@fontsource/barlow-condensed": "^5.3.0",
     "@fontsource/dm-sans": "^5.3.0",
     "@fontsource/jetbrains-mono": "^5.3.0",
+    "peerjs": "^1.5.5",
     "three": "^0.187.0"
   }
 }

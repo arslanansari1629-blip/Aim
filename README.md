@@ -9,6 +9,14 @@ npm install
 npm run dev
 ```
 
+For local multiplayer testing, run signaling in a second terminal, then open two independent browser profiles:
+
+```bash
+npm run dev:peer
+```
+
+Production uses the public PeerJS signaling cloud. Gameplay and social messages travel over encrypted peer-to-peer WebRTC data channels.
+
 ## Controls
 
 - **WASD** — move
@@ -26,6 +34,11 @@ Touch controls and assisted aiming appear automatically on phones and tablets. M
 
 ## Features
 
+- Player-chosen persistent callsigns, exact-name player search, live friend requests, accept/decline, and locally persistent friends
+- Real WebRTC duo co-op: invitations, a shared deterministic island, remote operators/nameplates, 10 Hz movement, host-authoritative bots and storm, remote tracers, and player/bot damage
+- Two detailed human glTF avatars with compatible skeletal combat animation; the selected operator determines the local, lobby, and remote appearance
+- Six usable weapon classes: Raven AR, Viper SMG, Longbow DMR, Titan LMG, Spectre SG, and Falcon SR
+- Interactive true-3D armory with mouse/touch rotation and weapon-specific geometry
 - Real-time 3D operator hangar lobby with cinematic lighting and camera parallax
 - Detailed transport-plane arrival, manual jumping, steerable freefall, automatic/manual parachute deployment, and landing
 - Expanded 2.4 km island with seven districts, coastlines, water, roads, terrain patches, 520 trees, rocks, and grass
@@ -35,7 +48,6 @@ Touch controls and assisted aiming appear automatically on phones and tablets. M
 - Precision headshots, floating damage numbers, and live enemy health/armor bars
 - 24-combatant Battle Royale and 12-combatant Blitz modes
 - Three operators with distinct tactical abilities
-- Three starting weapon classes plus in-match weapon loot
 - Articulated 3D avatars with smooth turning, speed-based locomotion, recoil, hit reactions, jumping, and elimination animations
 - Adaptive AI with obstacle steering, anti-stuck recovery, separation, line-of-sight combat, projectiles, armor, and reloads
 - Multi-phase shrinking storm and tactical minimap
@@ -57,4 +69,8 @@ Deploy the generated `dist` directory to any static host. Vercel configuration i
 
 ## Asset attribution
 
-The animated `Soldier.glb` model is distributed with the Three.js examples (`mrdoob/three.js`, `examples/models/gltf/Soldier.glb`). It is loaded locally and enhanced with custom operator accents, equipment, weapon geometry, and combat animation blending. All island structures, weapons, loot, supply drops, and effects are generated in code.
+The animated `Soldier.glb` and `Michelle.glb` models are distributed with the Three.js examples (`mrdoob/three.js`, `examples/models/gltf`). Both are loaded locally and enhanced with custom operator accents, equipment, weapon geometry, and combat animation blending. Michelle uses Soldier's compatible Mixamo locomotion clips. All island structures, weapons, loot, supply drops, and effects are generated in code.
+
+## Multiplayer scope
+
+ASHFALL 1.2.0 provides online duo co-op rather than large public matchmaking. Both players must be online and use exact callsigns. Friend requests are live; accepted friends persist on the device. The inviting player hosts bot and storm state. No account or gameplay database is required.
