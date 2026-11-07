@@ -22,7 +22,7 @@ npm run dev
 - **1 / 2** — switch weapon
 - **Escape** — pause
 
-Touch controls and assisted aiming appear automatically on mobile devices.
+Touch controls and assisted aiming appear automatically on phones and tablets. Mobile controls include movement, fire, ADS, jump, dash, reload, loot, operator ability, and weapon switching, with independent multi-touch tracking.
 
 ## Features
 
@@ -41,6 +41,9 @@ Touch controls and assisted aiming appear automatically on mobile devices.
 - Multi-phase shrinking storm and tactical minimap
 - Medkits, armor, ammunition, and weapon pickups
 - Persistent local career XP, eliminations, placements, and victories
+- Directional damage indicators, precision hit feedback, and full mobile combat controls
+- Adaptive mobile resolution, shadow quality, vegetation, animation distance, and lobby frame rate
+- Safe-area-aware portrait, landscape, small-screen, and tablet layouts
 - Procedural Web Audio effects and responsive desktop/mobile UI
 
 ## Production

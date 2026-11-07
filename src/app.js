@@ -79,7 +79,7 @@ function shell(content) {
         <button class="profile-chip" data-view="profile"><span class="level-badge">${level()}</span><span><b>ROOKIE_${String(741 + profile.matches).padStart(4, '0')}</b><small>LEVEL ${level()} · ${profile.xp % 1000}/1000 XP</small></span>${icon('chevron')}</button>
       </div>
     </header>${content}
-    <div class="system-line"><span><i class="status-dot"></i> ALL SYSTEMS OPERATIONAL</span><span>BUILD 1.1.0 // ASHFALL SECURE NETWORK</span><span>NO DOWNLOAD · NO PAY TO WIN</span></div>
+    <div class="system-line"><span><i class="status-dot"></i> ALL SYSTEMS OPERATIONAL</span><span>BUILD 1.1.1 // ASHFALL SECURE NETWORK</span><span>NO DOWNLOAD · NO PAY TO WIN</span></div>
   </main>`;
 }
 
