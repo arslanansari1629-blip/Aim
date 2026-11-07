@@ -14,7 +14,7 @@ npm run dev
 - **WASD** — move
 - **Mouse / left click** — third-person aim / fire
 - **Right click** — aim down sights
-- **Space** — jump
+- **Space** — jump from the transport plane, open the parachute, or jump during combat
 - **R** — reload
 - **Shift** — combat dash
 - **Q** — operator ability
@@ -26,7 +26,10 @@ Touch controls and assisted aiming appear automatically on mobile devices.
 
 ## Features
 
-- Real-time WebGL 3D island with third-person camera, ADS, jumping, dynamic shadows, fog, procedural textures, and drifting ash
+- Real-time 3D operator hangar lobby with cinematic lighting and camera parallax
+- Detailed transport-plane arrival, manual jumping, steerable freefall, automatic/manual parachute deployment, and landing
+- Expanded 2.4 km island with seven districts, coastlines, water, roads, terrain patches, 520 trees, rocks, and grass
+- Real-time WebGL third-person camera, ADS, jumping, dynamic shadows, fog, procedural textures, and drifting ash
 - Professionally textured glTF soldiers with skeletal idle, walk, and run animations (procedural fallback included)
 - Detailed rifles, concrete structures, rooftop equipment, reinforced crates, layered vegetation, and animated supply drops
 - Precision headshots, floating damage numbers, and live enemy health/armor bars

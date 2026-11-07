@@ -16,6 +16,7 @@ import '@fontsource/jetbrains-mono/latin-600.css';
 import '@fontsource/jetbrains-mono/latin-700.css';
 import './style.css';
 import { Battleground } from './game.js';
+import { LobbyScene } from './lobby3d.js';
 
 const icons = {
   play: '<path d="m8 5 11 7-11 7z"/>',
@@ -55,6 +56,7 @@ const defaults = { xp: 0, wins: 0, matches: 0, kills: 0, best: 0, operator: 'pha
 let profile;
 try { profile = { ...defaults, ...JSON.parse(localStorage.getItem('ashfall-profile') || '{}') }; } catch { profile = { ...defaults }; }
 let game = null;
+let lobbyScene = null;
 let currentView = 'home';
 const app = document.querySelector('#app');
 const save = () => { try { localStorage.setItem('ashfall-profile', JSON.stringify(profile)); } catch {} };
@@ -77,13 +79,14 @@ function shell(content) {
         <button class="profile-chip" data-view="profile"><span class="level-badge">${level()}</span><span><b>ROOKIE_${String(741 + profile.matches).padStart(4, '0')}</b><small>LEVEL ${level()} · ${profile.xp % 1000}/1000 XP</small></span>${icon('chevron')}</button>
       </div>
     </header>${content}
-    <div class="system-line"><span><i class="status-dot"></i> ALL SYSTEMS OPERATIONAL</span><span>BUILD 1.0.7 // ASHFALL SECURE NETWORK</span><span>NO DOWNLOAD · NO PAY TO WIN</span></div>
+    <div class="system-line"><span><i class="status-dot"></i> ALL SYSTEMS OPERATIONAL</span><span>BUILD 1.1.0 // ASHFALL SECURE NETWORK</span><span>NO DOWNLOAD · NO PAY TO WIN</span></div>
   </main>`;
 }
 
 function homeView() {
   const o = op(), w = gun();
   return shell(`<section class="hero">
+    <div class="lobby-scene" aria-label="3D operator lobby"></div><div class="scene-caption"><span>LIVE OPERATOR VIEW</span><b>BLACKOUT // HANGAR 07</b></div>
     <div class="hero-vignette"></div><div class="hero-grid"></div>
     <div class="hero-copy">
       <div class="eyebrow"><span class="season-tag">SEASON 01</span><span>THE COLLAPSE HAS BEGUN</span></div>
@@ -124,8 +127,8 @@ function armoryView() {
 }
 
 function guideView() {
-  const controls = [['W A S D', 'Move in 3D'], ['MOUSE', 'Third-person aim'], ['LMB', 'Fire weapon'], ['RMB', 'Aim down sights'], ['SPACE', 'Jump'], ['R', 'Reload'], ['SHIFT', 'Combat dash'], ['Q', 'Operator ability'], ['E', 'Collect nearby loot'], ['1 / 2', 'Switch weapons'], ['ESC', 'Pause match']];
-  return shell(`<section class="page-view guide-view"><div class="section-heading"><div><span class="eyebrow-text">SURVIVE THE COLLAPSE</span><h1>FIELD GUIDE</h1></div><p>The island rewards awareness, precision,<br/>and the courage to keep moving.</p></div><div class="guide-grid"><div class="guide-controls"><div class="panel-title">${icon('crosshair')} COMBAT CONTROLS <span>DESKTOP</span></div>${controls.map(([k, v]) => `<div class="control-row"><span>${v}</span><kbd>${k}</kbd></div>`).join('')}<div class="mobile-note">${icon('info')} Touch controls appear automatically on mobile.</div></div><div class="survival-steps">${[['01', 'DROP & LOOT', 'Land anywhere on Blackout Island. Collect armor, medkits, ammunition, and a secondary weapon from glowing supply caches.'], ['02', 'STAY INSIDE', 'The ash storm deals increasing damage outside the safe zone. Watch the minimap and rotate before the collapse.'], ['03', 'BE THE LAST', 'Outplay 23 adaptive combatants. Use structures as cover, dash out of danger, and unleash your operator ability.']].map(([n,t,p]) => `<article><span>${n}</span><div><h3>${t}</h3><p>${p}</p></div></article>`).join('')}<button class="deploy-button guide-deploy" id="deploy-btn"><span class="deploy-icon">${icon('play')}</span><span><small>READY, OPERATOR?</small><b>ENTER BATTLEGROUND</b></span>${icon('arrow')}</button></div></div></section>`);
+  const controls = [['W A S D', 'Move in 3D'], ['MOUSE', 'Third-person aim'], ['LMB', 'Fire weapon'], ['RMB', 'Aim down sights'], ['SPACE', 'Jump / open parachute'], ['R', 'Reload'], ['SHIFT', 'Combat dash'], ['Q', 'Operator ability'], ['E', 'Collect nearby loot'], ['1 / 2', 'Switch weapons'], ['ESC', 'Pause match']];
+  return shell(`<section class="page-view guide-view"><div class="section-heading"><div><span class="eyebrow-text">SURVIVE THE COLLAPSE</span><h1>FIELD GUIDE</h1></div><p>The island rewards awareness, precision,<br/>and the courage to keep moving.</p></div><div class="guide-grid"><div class="guide-controls"><div class="panel-title">${icon('crosshair')} COMBAT CONTROLS <span>DESKTOP</span></div>${controls.map(([k, v]) => `<div class="control-row"><span>${v}</span><kbd>${k}</kbd></div>`).join('')}<div class="mobile-note">${icon('info')} Touch controls appear automatically on mobile.</div></div><div class="survival-steps">${[['01', 'DROP & LOOT', 'Jump from the transport plane, steer your parachute, and land anywhere on Blackout Island. Collect armor, medkits, ammunition, and weapons from glowing caches.'], ['02', 'STAY INSIDE', 'The ash storm deals increasing damage outside the safe zone. Watch the minimap and rotate before the collapse.'], ['03', 'BE THE LAST', 'Outplay 23 adaptive combatants. Use structures as cover, dash out of danger, and unleash your operator ability.']].map(([n,t,p]) => `<article><span>${n}</span><div><h3>${t}</h3><p>${p}</p></div></article>`).join('')}<button class="deploy-button guide-deploy" id="deploy-btn"><span class="deploy-icon">${icon('play')}</span><span><small>READY, OPERATOR?</small><b>ENTER BATTLEGROUND</b></span>${icon('arrow')}</button></div></div></section>`);
 }
 
 function profileView() {
@@ -135,8 +138,13 @@ function profileView() {
 
 function render() {
   if (game) { game.destroy(); game = null; }
+  if (lobbyScene) { lobbyScene.destroy(); lobbyScene = null; }
   app.innerHTML = ({ home: homeView, operators: operatorsView, armory: armoryView, guide: guideView, profile: profileView }[currentView] || homeView)();
   bind();
+  if (currentView === 'home') {
+    const mount = document.querySelector('.lobby-scene');
+    if (mount) lobbyScene = new LobbyScene(mount, op().color);
+  }
 }
 function bind() {
   document.querySelectorAll('[data-view]').forEach(el => el.addEventListener('click', () => { currentView = el.dataset.view; render(); window.scrollTo(0,0); }));
@@ -168,6 +176,7 @@ function showSettings() {
 }
 function startMatch() {
   currentView = 'home';
+  if (lobbyScene) { lobbyScene.destroy(); lobbyScene = null; }
   if (game) { game.destroy(); game = null; }
   app.innerHTML = `<main id="game-root"></main>`;
   game = new Battleground(document.querySelector('#game-root'), { operator: op(), weapon: gun(), mode: profile.mode, muted: profile.muted }, {
