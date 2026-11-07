@@ -26,7 +26,10 @@ Touch controls and assisted aiming appear automatically on mobile devices.
 
 ## Features
 
-- Real-time WebGL 3D island with third-person camera, ADS, jumping, dynamic shadows, fog, and procedural textures
+- Real-time WebGL 3D island with third-person camera, ADS, jumping, dynamic shadows, fog, procedural textures, and drifting ash
+- Professionally textured glTF soldiers with skeletal idle, walk, and run animations (procedural fallback included)
+- Detailed rifles, concrete structures, rooftop equipment, reinforced crates, layered vegetation, and animated supply drops
+- Precision headshots, floating damage numbers, and live enemy health/armor bars
 - 24-combatant Battle Royale and 12-combatant Blitz modes
 - Three operators with distinct tactical abilities
 - Three starting weapon classes plus in-match weapon loot
@@ -45,3 +48,7 @@ npm run preview
 ```
 
 Deploy the generated `dist` directory to any static host. Vercel configuration is included.
+
+## Asset attribution
+
+The animated `Soldier.glb` model is distributed with the Three.js examples (`mrdoob/three.js`, `examples/models/gltf/Soldier.glb`). It is loaded locally and enhanced with custom operator accents, equipment, weapon geometry, and combat animation blending. All island structures, weapons, loot, supply drops, and effects are generated in code.
