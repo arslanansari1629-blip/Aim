@@ -77,7 +77,7 @@ function homeView() {
         <button class="deploy-button" id="deploy-btn"><span class="deploy-icon">${icon('play')}</span><span><small>SOLO // ${profile.mode === 'blitz' ? 'BLITZ' : 'BATTLE ROYALE'}</small><b>DEPLOY NOW</b></span>${icon('arrow')}</button>
         <button class="mode-button" id="mode-btn"><span>${icon('map')}</span><span><small>GAME MODE</small><b>${profile.mode === 'blitz' ? 'BLITZ PROTOCOL' : 'BATTLE ROYALE'}</b></span>${icon('chevron')}</button>
       </div>
-      <div class="hero-proof"><span>${icon('crosshair')} 23 AI COMBATANTS</span><span>${icon('clock')} ~6 MIN MATCH</span><span>${icon('bolt')} INSTANT PLAY</span></div>
+      <div class="hero-proof"><span>${icon('crosshair')} REAL-TIME 3D COMBAT</span><span>${icon('clock')} ~6 MIN MATCH</span><span>${icon('bolt')} INSTANT PLAY</span></div>
     </div>
     <aside class="operative-card"><span class="card-index">ACTIVE OPERATOR // 0${operators.indexOf(o) + 1}</span><div class="operative-title"><span style="--op-color:${o.color}">${o.letter}</span><div><small>${o.role.toUpperCase()}</small><h3>${o.name}</h3></div></div><div class="operative-skill">${icon('bolt')}<span><small>TACTICAL ABILITY</small><b>${o.skill}</b></span><kbd>Q</kbd></div></aside>
     <div class="loadout-dock">
@@ -108,7 +108,7 @@ function armoryView() {
 }
 
 function guideView() {
-  const controls = [['W A S D', 'Move'], ['MOUSE', 'Aim'], ['LMB', 'Fire'], ['R', 'Reload'], ['SHIFT', 'Combat dash'], ['Q', 'Operator ability'], ['E', 'Collect nearby loot'], ['1 / 2', 'Switch weapons'], ['ESC', 'Pause match']];
+  const controls = [['W A S D', 'Move in 3D'], ['MOUSE', 'Third-person aim'], ['LMB', 'Fire weapon'], ['RMB', 'Aim down sights'], ['SPACE', 'Jump'], ['R', 'Reload'], ['SHIFT', 'Combat dash'], ['Q', 'Operator ability'], ['E', 'Collect nearby loot'], ['1 / 2', 'Switch weapons'], ['ESC', 'Pause match']];
   return shell(`<section class="page-view guide-view"><div class="section-heading"><div><span class="eyebrow-text">SURVIVE THE COLLAPSE</span><h1>FIELD GUIDE</h1></div><p>The island rewards awareness, precision,<br/>and the courage to keep moving.</p></div><div class="guide-grid"><div class="guide-controls"><div class="panel-title">${icon('crosshair')} COMBAT CONTROLS <span>DESKTOP</span></div>${controls.map(([k, v]) => `<div class="control-row"><span>${v}</span><kbd>${k}</kbd></div>`).join('')}<div class="mobile-note">${icon('info')} Touch controls appear automatically on mobile.</div></div><div class="survival-steps">${[['01', 'DROP & LOOT', 'Land anywhere on Blackout Island. Collect armor, medkits, ammunition, and a secondary weapon from glowing supply caches.'], ['02', 'STAY INSIDE', 'The ash storm deals increasing damage outside the safe zone. Watch the minimap and rotate before the collapse.'], ['03', 'BE THE LAST', 'Outplay 23 adaptive combatants. Use structures as cover, dash out of danger, and unleash your operator ability.']].map(([n,t,p]) => `<article><span>${n}</span><div><h3>${t}</h3><p>${p}</p></div></article>`).join('')}<button class="deploy-button guide-deploy" id="deploy-btn"><span class="deploy-icon">${icon('play')}</span><span><small>READY, OPERATOR?</small><b>ENTER BATTLEGROUND</b></span>${icon('arrow')}</button></div></div></section>`);
 }
 

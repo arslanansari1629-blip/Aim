@@ -1,6 +1,6 @@
 # ASHFALL — Tactical Battlegrounds
 
-An original, browser-playable top-down battle royale built with Canvas 2D, JavaScript, and Vite.
+An original, browser-playable real-time 3D third-person battle royale built with Three.js, WebGL, JavaScript, and Vite.
 
 ## Play
 
@@ -12,7 +12,9 @@ npm run dev
 ## Controls
 
 - **WASD** — move
-- **Mouse / left click** — aim / fire
+- **Mouse / left click** — third-person aim / fire
+- **Right click** — aim down sights
+- **Space** — jump
 - **R** — reload
 - **Shift** — combat dash
 - **Q** — operator ability
@@ -24,6 +26,7 @@ Touch controls and assisted aiming appear automatically on mobile devices.
 
 ## Features
 
+- Real-time WebGL 3D island with third-person camera, ADS, jumping, dynamic shadows, fog, and procedural textures
 - 24-combatant Battle Royale and 12-combatant Blitz modes
 - Three operators with distinct tactical abilities
 - Three starting weapon classes plus in-match weapon loot
