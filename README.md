@@ -30,7 +30,8 @@ Touch controls and assisted aiming appear automatically on mobile devices.
 - 24-combatant Battle Royale and 12-combatant Blitz modes
 - Three operators with distinct tactical abilities
 - Three starting weapon classes plus in-match weapon loot
-- Adaptive AI, line-of-sight combat, projectiles, armor, and reloads
+- Articulated 3D avatars with smooth turning, speed-based locomotion, recoil, hit reactions, jumping, and elimination animations
+- Adaptive AI with obstacle steering, anti-stuck recovery, separation, line-of-sight combat, projectiles, armor, and reloads
 - Multi-phase shrinking storm and tactical minimap
 - Medkits, armor, ammunition, and weapon pickups
 - Persistent local career XP, eliminations, placements, and victories
